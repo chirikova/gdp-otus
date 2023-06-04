@@ -1,4 +1,4 @@
-module github.com/hw01_hello_otus/hw01_hello_otus
+module github.com/chirikova/gdp-otus/hw01_hello_otus
 
 go 1.19
 
