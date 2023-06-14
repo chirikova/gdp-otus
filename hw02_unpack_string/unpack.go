@@ -12,6 +12,7 @@ var ErrInvalidString = errors.New("invalid string")
 func isRuneEscapeChar(r rune) bool {
 	return string(r) == "\\"
 }
+
 func isWritable(r rune, isEscaped bool) bool {
 	return (!isEscaped && unicode.IsLetter(r)) || (isEscaped && (unicode.IsDigit(r) || isRuneEscapeChar(r)))
 }
