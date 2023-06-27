@@ -11,7 +11,7 @@ func Top10(str string) []string {
 		return nil
 	}
 
-	splitPattern := regexp.MustCompile(`[\p{P}\p{S}]*\s+`)
+	splitPattern := regexp.MustCompile(`\s*\p{P}*\s+`)
 
 	type wordOccurrence struct {
 		word  string
@@ -23,10 +23,6 @@ func Top10(str string) []string {
 
 	for _, val := range splitPattern.Split(str, -1) {
 		val = strings.ToLower(val)
-
-		if len(val) == 0 {
-			continue
-		}
 
 		wordsCount[val]++
 	}
