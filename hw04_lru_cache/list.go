@@ -37,10 +37,12 @@ func (l *list) Back() *ListItem {
 func (l *list) PushFront(v interface{}) *ListItem {
 	newItem := ListItem{v, nil, nil}
 
+	// кейс если стартовый уже определен
 	if l.start != nil {
 		l.start.Prev, newItem.Next = &newItem, l.start
 	}
 
+	// кейс если стартовый не определен, но задан конечный
 	if l.start == nil && l.end != nil {
 		l.end.Prev = &newItem
 		newItem.Next = l.end
@@ -56,10 +58,12 @@ func (l *list) PushFront(v interface{}) *ListItem {
 func (l *list) PushBack(v interface{}) *ListItem {
 	newItem := ListItem{v, nil, nil}
 
+	// кейс если конечный уже определен
 	if l.end != nil {
 		l.end.Next, newItem.Prev = &newItem, l.end
 	}
 
+	// кейс если конечный не определен, но задан стартовый
 	if l.start != nil && l.end == nil {
 		l.start.Next = &newItem
 		newItem.Prev = l.start
@@ -121,8 +125,6 @@ func (l *list) MoveToFront(i *ListItem) {
 	i.Next = l.start
 
 	l.start = i
-
-	return
 }
 
 func NewList() List {
