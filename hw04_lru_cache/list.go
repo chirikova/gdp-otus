@@ -22,7 +22,7 @@ type list struct {
 	end   *ListItem
 }
 
-func (l list) Len() int {
+func (l *list) Len() int {
 	return l.len
 }
 
