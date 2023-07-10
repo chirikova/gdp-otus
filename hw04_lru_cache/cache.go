@@ -30,20 +30,22 @@ func (c *lruCache) Set(key Key, value interface{}) bool {
 
 	if found {
 		item.Value.(*mapItem).value = value
-		c.queue.PushFront(item)
-		return found
+
+		c.queue.MoveToFront(item)
+	} else {
+		item = &ListItem{Value: &mapItem{key, value}}
+
+		c.queue.PushFront(item.Value)
+
 	}
 
-	item = &ListItem{Value: &mapItem{key, value}}
+	c.items[key] = c.queue.Front()
 
-	if c.queue.Len() == c.capacity {
+	if !found && c.queue.Len() == c.capacity {
 		delItem := c.queue.Back()
 		delete(c.items, delItem.Value.(*mapItem).key)
 		c.queue.Remove(delItem)
 	}
-
-	c.items[key] = item
-	c.queue.PushFront(item)
 
 	return found
 }
@@ -59,7 +61,9 @@ func (c *lruCache) Get(key Key) (interface{}, bool) {
 		return nil, found
 	}
 
-	c.queue.PushFront(item)
+	c.queue.MoveToFront(item)
+
+	item = c.queue.Front()
 
 	return item.Value.(*mapItem).value, found
 }

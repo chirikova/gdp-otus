@@ -70,6 +70,34 @@ func TestCache(t *testing.T) {
 		wasInCache := c.Set("ghk", "khg")
 		require.False(t, wasInCache)
 	})
+
+	t.Run("invalidate by capacity logic", func(t *testing.T) {
+		c := NewCache(4)
+
+		c.Set("abc", "cba")
+		c.Set("def", "fed")
+		c.Set("ghk", "khg")
+		c.Set("lmn", "nml")
+		c.Set("opr", "rpo")
+
+		_, ok := c.Get("abc")
+		require.False(t, ok)
+	})
+
+	t.Run("invalidate by capacity old elements", func(t *testing.T) {
+		c := NewCache(3)
+
+		c.Set("abc", "cba")
+		c.Set("def", "fed")
+		c.Set("ghk", "khg")
+		c.Get("def")
+		c.Get("abc")
+		c.Set("ghk", 100)
+		c.Set("lmn", "nml")
+
+		_, ok := c.Get("def")
+		require.False(t, ok)
+	})
 }
 
 func TestCacheMultithreading(t *testing.T) {
