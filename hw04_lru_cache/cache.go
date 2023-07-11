@@ -28,19 +28,21 @@ func (c *lruCache) Set(key Key, value interface{}) bool {
 
 	item, found := c.items[key]
 
+	// если найден обновляем значение элемента и двигаем вперед
 	if found {
 		item.Value.(*mapItem).value = value
 
 		c.queue.MoveToFront(item)
 	} else {
+		// если не найден новый элемент в начало очереди
 		item = &ListItem{Value: &mapItem{key, value}}
 
 		c.queue.PushFront(item.Value)
-
 	}
 
 	c.items[key] = c.queue.Front()
 
+	// если не найден и превышена капасити удаляем последний элемент из очереди и соответствующий из словаря
 	if !found && c.queue.Len() == c.capacity {
 		delItem := c.queue.Back()
 		delete(c.items, delItem.Value.(*mapItem).key)
@@ -57,15 +59,15 @@ func (c *lruCache) Get(key Key) (interface{}, bool) {
 
 	item, found := c.items[key]
 
+	// элемент не найден
 	if !found {
 		return nil, found
 	}
 
+	// элемент найден - двигаем в начало очереди и возвращаем его значение
 	c.queue.MoveToFront(item)
 
-	item = c.queue.Front()
-
-	return item.Value.(*mapItem).value, found
+	return c.queue.Front().Value.(*mapItem).value, found
 }
 
 func (c *lruCache) Clear() {

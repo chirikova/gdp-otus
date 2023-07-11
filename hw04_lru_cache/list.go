@@ -120,10 +120,20 @@ func (l *list) Remove(i *ListItem) {
 }
 
 func (l *list) MoveToFront(i *ListItem) {
+	// кейс если уже впереди
+	if i.Prev == l.start {
+		i.Prev.Prev = i
+	}
 	if i == l.start {
 		return
 	}
 
+	// кейс если меняем местами с начальным
+	if i.Prev == l.start {
+		i.Prev.Prev = i
+	}
+
+	// кейс если двигаем с самого конца
 	if i == l.end {
 		i.Prev.Next = nil
 		l.end = i.Prev
@@ -133,7 +143,6 @@ func (l *list) MoveToFront(i *ListItem) {
 
 	i.Prev = nil
 	i.Next = l.start
-
 	l.start = i
 }
 
